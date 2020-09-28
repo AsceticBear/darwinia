@@ -65,6 +65,9 @@ pallet-timestamp                           = { default-features = false, git = "
 pallet-transaction-payment                 = { default-features = false, git = "https://github.com/darwinia-network/substrate.git", branch = "common-library" }
 pallet-transaction-payment-rpc-runtime-api = { default-features = false, git = "https://github.com/darwinia-network/substrate.git", branch = "common-library" }
 pallet-utility                             = { default-features = false, git = "https://github.com/darwinia-network/substrate.git", branch = "common-library" }
+pallet-evm = { version = "2.0.0-dev", default-features = false, package = "pallet-evm", git = "https://github.com/paritytech/substrate.git", branch = "frontier" }
+# pallet-evm                               = { default-features = false, git = "https://github.com/darwinia-network/substrate.git", branch = "common-library" }
+# pallet-evm = { version = "2.0.0-rc6", default-features = false}
 # substrate primitives
 sp-api                 = { default-features = false, git = "https://github.com/darwinia-network/substrate.git", branch = "common-library" }
 sp-authority-discovery = { default-features = false, git = "https://github.com/darwinia-network/substrate.git", branch = "common-library" }
@@ -130,6 +133,7 @@ std    = [
 	"pallet-session/std",
 	"pallet-society/std",
 	"pallet-sudo/std",
+	"pallet-evm/std",
 	"pallet-timestamp/std",
 	"pallet-transaction-payment/std",
 	"pallet-transaction-payment-rpc-runtime-api/std",

@@ -56,6 +56,9 @@ use frame_support::{
 	weights::Weight,
 };
 use frame_system::{EnsureOneOf, EnsureRoot};
+use pallet_evm::{
+	Account as EVMAccount, EnsureAddressTruncated, FeeCalculator, HashedAddressMapping,
+};
 use pallet_grandpa::{
 	fg_primitives, AuthorityId as GrandpaId, AuthorityList as GrandpaAuthorityList,
 };
@@ -67,6 +70,7 @@ use sp_authority_discovery::AuthorityId as AuthorityDiscoveryId;
 use sp_core::{
 	u32_trait::{_1, _2, _3, _5},
 	OpaqueMetadata,
+	U256,
 };
 use sp_runtime::{
 	create_runtime_str, generic, impl_opaque_keys,
@@ -818,6 +822,29 @@ impl pallet_sudo::Trait for Runtime {
 	type Call = Call;
 }
 
+// bear add evm pallet support
+pub struct FixedGasPrice;
+impl FeeCalculator for FixedGasPrice {
+	fn min_gas_price() -> U256 {
+		1.into()
+	}
+}
+
+parameter_types! {
+	pub const ChainId: u64 = 43;
+}
+
+impl pallet_evm::Trait for Runtime {
+	type FeeCalculator = FixedGasPrice;
+	type CallOrigin = EnsureAddressTruncated;
+	type WithdrawOrigin = EnsureAddressTruncated;
+	type AddressMapping = HashedAddressMapping<BlakeTwo256>;
+	type Currency = Balance;
+	type Event = Event;
+	type Precompiles = ();
+	type ChainId = ChainId;
+}
+
 parameter_types! {
 	pub const EthBackingModuleId: ModuleId = ModuleId(*b"da/ethbk");
 }
@@ -966,6 +993,8 @@ construct_runtime!(
 		CrabIssuing: darwinia_crab_issuing::{Module, Call, Storage, Config, Event<T>},
 
 		Democracy: darwinia_democracy::{Module, Call, Storage, Config, Event<T>},
+
+		EVM: pallet_evm::{Module, Config, Call, Storage, Event<T>},
 	}
 );
 
